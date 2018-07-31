@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block css %}
+{% endblock %}
+
+{% block body %}
+<divb id='drag-drop-area'>
+    <h3>共有ファイル</h3>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col"> </th>
+          <th scope="col">FILE NAME</th>
+        </tr>
+      </thead>
+      <tbody>
+	{% for i in param1 %}
+        <tr>
+          <th style="width:30px" scope="row">
+            <i style="font-size:30px" class="far {{ i.0 }}"></i>
+          </th>
+          <td style="font-size:20px; font-weight:bold;" >
+		<a href="/{{ i.1 }}" download="{{ i.2 }}">{{ i.2 }}</a>
+	  </td>
+        </tr>
+	{% endfor %}
+      </tbody>
+    </table>
+</div>
+
+<form action='/upload/' method='post' enctype='multipart/form-data'>
+      {% csrf_token %}
+      <p></p>
+      <p ><input id='fileInput' type='file' name='upfile[]' multiple></p>
+      <input type='submit' value='送信'>
+</form>
+
+{% endblock %}
+
+{% block script %}
+<script>
+var fileArea = document.getElementById('drag-drop-area');
+var fileInput = document.getElementById('fileInput');
+
+
+fileArea.addEventListener('dragover', function(evt){
+  evt.preventDefault();
+  fileArea.classList.add('dragover');
+});
+
+fileArea.addEventListener('dragleave', function(evt){
+    evt.preventDefault();
+    fileArea.classList.remove('dragover');
+});
+fileArea.addEventListener('drop', function(evt){
+    evt.preventDefault();
+    fileArea.classList.remove('dragenter');
+    var files = evt.dataTransfer.files;
+    fileInput.files = files;
+});
+</script>
+
+{% endblock %}
